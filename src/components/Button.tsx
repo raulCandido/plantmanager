@@ -1,4 +1,5 @@
 import React from 'react';
+import { TouchableOpacityProps } from 'react-native';
 import {
     TouchableOpacity,
     Text,
@@ -7,10 +8,20 @@ import {
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 
-export function Button(){
+interface ButtonProps extends TouchableOpacityProps{
+   nome: string
+}
+
+//passando parametros com props
+export function Button({nome, ...rest}: ButtonProps) {
     return(
         <TouchableOpacity style={styles.container}>
-            <Text style={styles.font}>Confirmar</Text>
+            <Text style={styles.font}
+            // O objeto de rest que vem da interface "TouchableOpacityProps" sempre deve ser o ultimo comando chamado
+            {...rest}
+            >
+                {nome}
+            </Text>
         </TouchableOpacity>
     )
 }

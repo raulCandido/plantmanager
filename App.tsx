@@ -1,7 +1,7 @@
 import React from 'react';
 import AppLoading from 'expo-app-loading'
 
-import { UserIdentification } from './src/pages/UserIdentification';
+import Routes from './src/routes';
 
 //carregamento de fontes sempre no arquivo raiz do projeto
 import {
@@ -22,7 +22,7 @@ export default function App() {
   }
 
   return (
-    <UserIdentification/>
+    <Routes/>
   )
 }
 

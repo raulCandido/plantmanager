@@ -14,10 +14,16 @@ import { Feather } from '@expo/vector-icons'
 import watering from '../assets/watering.png'
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
+import { useNavigation } from '@react-navigation/native';
 
 export function Welcome (){
     //estado é a capacidade de controlar quando determinado componente deve ser recarregado
+    // objeto para realizar navegacao entre as telas
+    const navigation = useNavigation();
 
+    function handleStart(){
+        navigation.navigate('UserIdentification')
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -29,7 +35,7 @@ export function Welcome (){
                 <Text style={styles.subTitle}>
                     Não esqueça mais de regar suas plantas. Nós cuidamos de lembrar você sempre que precisar.
                 </Text>
-                <TouchableOpacity style={styles.button} activeOpacity={0.7}>
+                <TouchableOpacity style={styles.button} activeOpacity={0.7} onPress={handleStart}>
                     <Feather style={styles.buttonIcon} name="chevron-right"/>
                 </TouchableOpacity>
             </View>
