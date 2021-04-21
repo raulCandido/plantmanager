@@ -1,36 +1,50 @@
 import React, {useState} from 'react';
-import { SafeAreaView, Text, Image, StyleSheet } from 'react-native';
+import {
+    SafeAreaView,
+    Text,
+    Image,
+    StyleSheet,
+    TouchableOpacity,
+    //compomente para posibilitar pegar tamanho da tela
+    Dimensions,
+    View
+} from 'react-native';
+import { Feather } from '@expo/vector-icons'
 
 import watering from '../assets/watering.png'
 import colors from '../styles/colors';
-import { Button } from '../components/Button'
+import fonts from '../styles/fonts';
 
 export function Welcome (){
     //estado é a capacidade de controlar quando determinado componente deve ser recarregado
-    const [visivel, setVisivel] = useState(false);
 
-    function trocarVisibilidade(){
-        setVisivel(true)
-    }
+
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.title}>
-                Gerencie{'\n'}suas plantas{'\n'}de forma fácil
-            </Text>
-            {
-                visivel && <Image style={styles.img} source={watering} />
-            }
-            <Text style={styles.subTitle}>Não esqueça mais de regar suas plantas. Nós cuidamos de lembrar você sempre que precisar.</Text>
-            <Button title="Vamos lá" onPress={trocarVisibilidade}/>
-            
+            <View style={styles.wrapper}>
+                <Text style={styles.title}>
+                    Gerencie{'\n'}suas plantas de{'\n'} forma fácil
+                </Text>
+                <Image style={styles.img} resizeMode="contain" source={watering} />
+                <Text style={styles.subTitle}>
+                    Não esqueça mais de regar suas plantas. Nós cuidamos de lembrar você sempre que precisar.
+                </Text>
+                <TouchableOpacity style={styles.button} activeOpacity={0.7}>
+                    <Feather style={styles.buttonIcon} name="chevron-right"/>
+                </TouchableOpacity>
+            </View>
         </SafeAreaView>
     )
 }
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    wrapper:{
+        flex: 1,
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'space-around',
+        paddingHorizontal:20
     },
     title:{
         fontSize: 36,
@@ -38,6 +52,7 @@ const styles = StyleSheet.create({
         textAlign:'center',
         //importando o arquivo de cores conforme arquivo
         color: colors.heading,
+        fontFamily: fonts.heading,
         marginTop:34
     },
     subTitle:{
@@ -45,7 +60,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         //utilizado para aproximar o conteudo ao meio
         paddingHorizontal:20,
-        color: colors.heading
+        color: colors.heading,
+        fontFamily: fonts.text
+    },
+    img:{
+        //calcura a largura que a imagem deve ocupar
+        height: Dimensions.get('window').width * 0.7,
     },
     button:{
         backgroundColor: colors.green,
@@ -54,17 +74,12 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         marginBottom:10,
         height: 56,
-        paddingHorizontal: 5,
+        width:56,
         fontSize: 18
     },
-    img:{
-        height: 292,
-        width:294
-    },
-    buttonText:{
-        fontSize:20,
-        color: colors.white,
-        fontWeight: 'bold'
+    buttonIcon:{
+        fontSize:24,
+        color: colors.white
     }
 
 })
