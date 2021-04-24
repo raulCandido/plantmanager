@@ -15,10 +15,9 @@ interface ButtonProps extends TouchableOpacityProps{
 //passando parametros com props
 export function Button({nome, ...rest}: ButtonProps) {
     return(
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity style={styles.container} {...rest}>
             <Text style={styles.font}
             // O objeto de rest que vem da interface "TouchableOpacityProps" sempre deve ser o ultimo comando chamado
-            {...rest}
             >
                 {nome}
             </Text>
