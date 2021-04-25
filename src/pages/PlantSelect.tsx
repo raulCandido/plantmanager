@@ -1,33 +1,91 @@
-import React,{useState} from 'react';
-import { 
+import React, { useState, useEffect } from 'react';
+import {
     SafeAreaView,
     View,
     Text,
     StyleSheet,
     //objeto para reenderizar listas na tela
-    FlatList
+    FlatList,
+    ActivityIndicator
 } from 'react-native';
+
 import colors from '../styles/colors'
 import fonts from '../styles/fonts'
 
 import { Header } from '../components/Header'
 import { EnviromentButton } from '../components/EnviromentButton';
-import { useEffect } from 'react';
 import api from '../services/api';
+import { PlantCardPrimary } from '../components/PlantCardPrimary';
+import { Load } from '../components/Load'
 
 interface EnviromentProps {
     key: string
     title: string
 }
+interface PlantsProps {
+    id: string,
+    name: string
+    about: string
+    water_tips: string
+    photo: string
+    environments: [string],
+    frequency: {
+        times: number
+        repeat_every: string
+    }
+}
 
-export function PlantSelect (){
-    
+export function PlantSelect() {
+
     const [enviroments, setEnviroments] = useState<EnviromentProps[]>([])
+    const [plants, setPlants] = useState<PlantsProps[]>([])
+    //estado para auxiliar no consumo da API (trazendo toda informacao para o app evitando que o mesmo faça consulta varias vezes)
+    const [filteredPlants, setFilteredPlants] = useState<PlantsProps[]>([])
+    const [enviromentSelect, setEnviromentSelect] = useState('all')
+    const [loading, setLoading] = useState(true)
+
+    const [page, setPage] = useState(1)
+    const [loadingMore, setLoadingMore] = useState(false)
+
+    function selectGroupPlant(plantKey: string) {
+        setEnviromentSelect(plantKey)
+        if (plantKey == 'all')
+            return setFilteredPlants(plants)
+        const filtered = plants.filter(plant => plant.environments.includes(plantKey)
+        )
+        setFilteredPlants(filtered)
+    }
+
+    async function carregarPlantas() {
+        //a API json-server permite que os parametros passados no get sejam alterados
+        // no caso tem comandos como _sort, _order _limit e etc verificar api*
+        const { data } = await api.get(`plants?_sort=name&_order=asc&_page=${page}&_limit=8`)
+        //usando inferencia de bool do javaScript que permite verificar se objeto esta vazio
+        if (!data)
+            return setLoading(true)
+        if (page > 1) {
+            setPlants(dadosCarregadosInicialmente => [...dadosCarregadosInicialmente, ...data])
+            setFilteredPlants(dadosCarregadosInicialmente => [...dadosCarregadosInicialmente, ...data])
+        } else {
+            setPlants(data)
+            setFilteredPlants(data)
+        }
+        setLoading(false)
+        setLoadingMore(false)
+    }
+    
+    function carregarComScrolldeTela(distancia: number) {
+        if(distancia < 1)
+            return;
+        setLoadingMore(true)
+        setPage(valorAntigo => valorAntigo + 1)
+        carregarPlantas()
+    }
 
     //Carrega antes que toda tela seja montada
     useEffect(() => {
         async function fetchEnviroment() {
-            const { data } = await api.get('plants_environments')
+            const { data } = await api.get('plants_environments?_sort=title&_order=asc')
             setEnviroments([
                 {
                     key: 'all',
@@ -39,24 +97,31 @@ export function PlantSelect (){
         fetchEnviroment()
     }, [])
 
+    useEffect(() => { carregarPlantas() }, [])
 
-    return(
-        <SafeAreaView style={styles.container}>
+    if (loading) return <Load />
+
+    return (
+        <View style={styles.container}>
             <View style={styles.header}>
-                <Header/>
+                <Header />
                 <Text style={styles.title}>
-                   Em qual hambiente
+                    Em qual hambiente
                 </Text>
                 <Text style={styles.subTitle}>
-                   você quer colocar sua planta?
+                    você quer colocar sua planta?
                 </Text>
             </View>
-            <View style={styles.headerListButton}>
+            <View>
                 <FlatList
                     data={enviroments}
-
+                    //ganho de performance é padrao que todos os itens de uma lista tenham id o keyExtractor serve para isso
+                    keyExtractor = {(item) => String(item.key)}
                     renderItem={({ item }) => (
-                        <EnviromentButton title={item.title} active />
+                        <EnviromentButton title={item.title}
+                            active={item.key === enviromentSelect}
+                            onPress={() => selectGroupPlant(item.key)}
+                        />
                     )}
                     //propridade que coloca os itens na horizontal
                     horizontal
@@ -66,7 +131,29 @@ export function PlantSelect (){
                     contentContainerStyle={styles.EnviromentList}
                 />
             </View>
-        </SafeAreaView>
+            <View style={styles.plants}>
+                <FlatList
+                    data={filteredPlants}
+                    keyExtractor={(item)=> String(item.id)}
+                    renderItem={({ item }) => (
+                        <PlantCardPrimary data={item} />
+                        )}
+
+                    showsVerticalScrollIndicator={false}
+                    numColumns={2}
+                    //funcao para iniciar uma tarefa quando chegar a determinada distancia do final da tela o valor 0.1 representa 10%
+                    onEndReachedThreshold={0.1}
+                    onEndReached={({distanceFromEnd }) =>
+                        carregarComScrolldeTela(distanceFromEnd)
+                    }
+                    ListFooterComponent={
+                        loadingMore
+                            ? <ActivityIndicator color={colors.green}/>
+                            : <></>
+                    }
+                />
+            </View>
+        </View>
     )
 }
 const styles = StyleSheet.create({
@@ -74,32 +161,33 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
         backgroundColor: colors.background,
-        
     },
-    header:{
+    header: {
         justifyContent: 'space-between',
-        paddingHorizontal:25,
-        marginTop: 15
+        paddingHorizontal: 25,
+        marginTop: 5
     },
-    headerListButton:{ 
-        flexDirection: 'row',
+    EnviromentList: {
+        height: 45,
+        justifyContent: 'center',
+        paddingBottom: 2,
+        marginLeft: 32,
+        marginVertical: 32
     },
-    EnviromentList:{
-       height:45,
-       justifyContent: 'center',
-       paddingBottom: 5,
-       marginLeft: 32,
-       marginVertical: 32
-    },
-    title:{
-        fontSize:16,
+    title: {
+        fontSize: 16,
         fontFamily: fonts.heading,
         color: colors.heading
     },
-    subTitle:{
-        fontSize:16,
+    plants: {
+        flex: 1,
+        paddingHorizontal: 32,
+    },
+    subTitle: {
+        fontSize: 16,
         fontFamily: fonts.text,
         color: colors.heading
-    }
-
+    },
 })
+
+

@@ -39,8 +39,7 @@ export function EnviromentButton({ title, active = false, ...rest }: EnviromentB
 const styles = StyleSheet.create({
     container: {
         backgroundColor: colors.shape,
-        width: 76,
-        height: 46,
+        padding: 15,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 12,

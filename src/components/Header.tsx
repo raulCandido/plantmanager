@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Text,
     StyleSheet,
@@ -6,19 +6,53 @@ import {
     Image
 } from 'react-native';
 import { getStatusBarHeight } from 'react-native-iphone-x-helper'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import colors from '../styles/colors';
 import img from '../assets/person.png'
 import fonts from '../styles/fonts';
+import apiFakeFace from '../services/apiFakeFace';
+
+interface PersonProps{
+    age: number,
+    date_added: string,
+    filename: string,
+    gender: string,
+    image_url: string,
+    last_served: string,
+    source: string
+
+}
 
 export function Header(){
+    
+    const [userName, setUserName] = useState<string>()
+    const [person, setPerson] = useState<PersonProps>()
+
+    async function loadPersonApi(){
+        const { data } = await apiFakeFace.get('/face/json')
+        setPerson(data)
+    }
+
+    useEffect(() => {
+        async function loadStorageUserName() {
+            const user = await AsyncStorage.getItem('@plantmanager:user')
+            setUserName(user || '')
+        }
+        loadStorageUserName()
+    }, [])
+
+    useEffect(() => {
+        loadPersonApi()
+    }, [])
+
     return(
         <View style={styles.container}>
             <View>
                 <Text style={styles.comprimento}>Olá,</Text>
-                <Text style={styles.userName}>Raul Cândido</Text>
+                <Text style={styles.userName}>{userName}</Text>
             </View>
-            <Image style={styles.img} source={img}></Image>
+            <Image style={styles.img} source={{uri: person?.image_url}}></Image>
         </View>
         
     )
@@ -37,7 +71,6 @@ const styles = StyleSheet.create({
         fontFamily: fonts.text,
         fontSize: 32,
         color: colors.heading
-
     },
     userName:{
         fontFamily: fonts.heading,
@@ -53,5 +86,4 @@ const styles = StyleSheet.create({
         borderColor: colors.heading
         
     }
-
 })

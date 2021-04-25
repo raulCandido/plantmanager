@@ -9,14 +9,17 @@ import {
     KeyboardAvoidingView,
     //Possibilita que o focus saia do input possibilitando melhor usabilidade e fechando o teclado
     TouchableWithoutFeedback,
-    Platform
+    Platform,
+    Alert,
+    Keyboard
 } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 import { Button } from '../components/Button';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
-import { Keyboard } from 'react-native';
 
 
 
@@ -27,7 +30,13 @@ export function UserIdentification (){
     const [isFiled, setIsFiled] = useState(false)
     const [name, setName] = useState<string>()
 
-    function handleSubmit(){
+    async function handleSubmit(){
+        if(!name)
+            return Alert.alert(
+                'Nome não preenchido', `Preciso de seu nome. ${"\n"}Me diz como posso chamaro você 😯`,
+            ) 
+            // padrao para amazenar dados @nomeDoApp:variavel
+        await AsyncStorage.setItem('@plantmanager:user', name)
         navigation.navigate('Confirmation')
     }
 
@@ -44,7 +53,6 @@ export function UserIdentification (){
         setIsFiled(!!value)
         setName(value)
     }
-
 
     return(
         <SafeAreaView style={styles.container}>
