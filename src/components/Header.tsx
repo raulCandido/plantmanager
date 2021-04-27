@@ -44,6 +44,8 @@ export function Header(){
 
     useEffect(() => {
         loadPersonApi()
+        //vetor realiza carregamento de objeto, caso vazio carrega objeto uma unica vez
+        //porem caso tenha algum objeto dentro sempre que o objeto for alterado ele relizará alteracao no estado
     }, [])
 
     return(

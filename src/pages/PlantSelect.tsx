@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-    SafeAreaView,
     View,
     Text,
     StyleSheet,
@@ -17,6 +16,7 @@ import { EnviromentButton } from '../components/EnviromentButton';
 import api from '../services/api';
 import { PlantCardPrimary } from '../components/PlantCardPrimary';
 import { Load } from '../components/Load'
+import { useNavigation } from '@react-navigation/native';
 
 interface EnviromentProps {
     key: string
@@ -43,6 +43,7 @@ export function PlantSelect() {
     const [filteredPlants, setFilteredPlants] = useState<PlantsProps[]>([])
     const [enviromentSelect, setEnviromentSelect] = useState('all')
     const [loading, setLoading] = useState(true)
+    const navigation = useNavigation();
 
     const [page, setPage] = useState(1)
     const [loadingMore, setLoadingMore] = useState(false)
@@ -54,6 +55,10 @@ export function PlantSelect() {
         const filtered = plants.filter(plant => plant.environments.includes(plantKey)
         )
         setFilteredPlants(filtered)
+    }
+
+    function navegarParaPlantSave(plant: PlantsProps){
+        navigation.navigate('PlantSave', {plant})
     }
 
     async function carregarPlantas() {
@@ -136,7 +141,8 @@ export function PlantSelect() {
                     data={filteredPlants}
                     keyExtractor={(item)=> String(item.id)}
                     renderItem={({ item }) => (
-                        <PlantCardPrimary data={item} />
+                        <PlantCardPrimary data={item}
+                        onPress={() => navegarParaPlantSave(item)}/>
                         )}
 
                     showsVerticalScrollIndicator={false}
