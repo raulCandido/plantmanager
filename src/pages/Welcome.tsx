@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
     SafeAreaView,
     Text,
@@ -12,8 +12,8 @@ import {
 import { Feather } from '@expo/vector-icons'
 
 import watering from '../assets/watering.png'
-import colors from '../styles/colors';
-import fonts from '../styles/fonts';
+import colors from '../styles/colors'
+import fonts from '../styles/fonts'
 import { useNavigation } from '@react-navigation/native';
 
 export function Welcome (){

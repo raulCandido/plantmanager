@@ -32,12 +32,20 @@ export function UserIdentification (){
 
     async function handleSubmit(){
         if(!name)
-            return Alert.alert(
-                'Nome não preenchido', `Preciso de seu nome. ${"\n"}Me diz como posso chamaro você 😯`,
-            ) 
+            return Alert.alert('Nome não preenchido', `Preciso de seu nome. ${"\n"}Me diz como posso chamaro você 😯`) 
+            try {
             // padrao para amazenar dados @nomeDoApp:variavel
-        await AsyncStorage.setItem('@plantmanager:user', name)
-        navigation.navigate('Confirmation')
+            await AsyncStorage.setItem('@plantmanager:user', name)
+            navigation.navigate('Confirmation',{
+                title: 'Pronto',
+                subTitle: 'Agora vamos comecar a cuidar das suas plantas',
+                buttonTitle: 'Começar',
+                nextScreen: 'PlantSelect',
+                icon: 'smile'
+            })
+        } catch {
+            return Alert.alert('Desculpe', 'Não foi possível salvar o seu nome') 
+        }
     }
 
     function handleInputBlur() {

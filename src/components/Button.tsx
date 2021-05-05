@@ -1,20 +1,20 @@
-import React from 'react';
-import { TouchableOpacityProps } from 'react-native';
+import React from "react";
+import { TouchableOpacityProps } from "react-native";
 import {
     TouchableOpacity,
     Text,
     StyleSheet
-} from 'react-native'
-import colors from '../styles/colors';
-import fonts from '../styles/fonts';
+} from "react-native"
+import colors from "../styles/colors";
+import fonts from "../styles/fonts";
 
 interface ButtonProps extends TouchableOpacityProps{
    nome: string
 }
 
 //passando parametros com props
-export function Button({nome, ...rest}: ButtonProps) {
-    return(
+export function Button({ nome, ...rest }: ButtonProps) {
+    return (
         <TouchableOpacity style={styles.container} {...rest}>
             <Text style={styles.font}
             // O objeto de rest que vem da interface "TouchableOpacityProps" sempre deve ser o ultimo comando chamado
@@ -28,15 +28,15 @@ export function Button({nome, ...rest}: ButtonProps) {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: colors.green,
-        height:56,
-        
+        height: 56,
+
         borderRadius: 16,
-        justifyContent: 'center',
-        alignItems: 'center'
-        
+        justifyContent: "center",
+        alignItems: "center"
+
     },
-    font:{
-        fontSize:14,
+    font: {
+        fontSize: 14,
         fontFamily: fonts.heading,
         color: colors.white
     }
