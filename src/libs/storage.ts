@@ -13,6 +13,7 @@ export interface PlantsProps{
         repeat_every: string
     },
     dateTimeNotification: Date
+    hour:string
 }
 
 export interface EnviromentProps {
@@ -74,6 +75,6 @@ export async function loadPlantas(): Promise<PlantsProps[]> {
       )
     return organizedListPlant
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error)
   }
 }
