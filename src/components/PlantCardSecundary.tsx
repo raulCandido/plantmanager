@@ -1,6 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { RectButton, RectButtonProps } from "react-native-gesture-handler";
+import Swipeable from 'react-native-gesture-handler/Swipeable'
 import { SvgFromUri } from "react-native-svg";
 import colors from "../styles/colors";
 import fonts from "../styles/fonts";
@@ -15,14 +16,21 @@ interface PlantProps extends RectButtonProps {
 
 export const PlantCardSecundary = ({ data, ...rest }: PlantProps) => {
    return (
-      <RectButton style={styles.container} {...rest}>
-         <SvgFromUri uri={data.photo} width={50} height={50} />
-         <Text style={styles.name}>{data.name}</Text>
-         <View style={styles.hourDetails}>
-            <Text style={styles.labelRegar}>Regar às</Text>
-            <Text style={styles.hour}>{data.hour}</Text>
-         </View>
-      </RectButton>
+      <Swipeable
+         overshootRight={false}
+         renderRightActions={()=>(
+            
+         )}
+      >
+         <RectButton style={styles.container} {...rest}>
+            <SvgFromUri uri={data.photo} width={50} height={50} />
+            <Text style={styles.name}>{data.name}</Text>
+            <View style={styles.hourDetails}>
+               <Text style={styles.labelRegar}>Regar às</Text>
+               <Text style={styles.hour}>{data.hour}</Text>
+            </View>
+         </RectButton>
+      </Swipeable>
    )
 }
 const styles = StyleSheet.create({
@@ -49,5 +57,6 @@ const styles = StyleSheet.create({
      alignItems: "flex-end" 
    },
    hour:{
+      color: colors.heading
     }
 })

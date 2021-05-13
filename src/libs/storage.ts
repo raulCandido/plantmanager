@@ -21,7 +21,7 @@ export interface EnviromentProps {
     title: string
 }
 
-interface StoragePlantProps {
+export interface StoragePlantProps {
     [id: string]:{
         data: PlantsProps
     }

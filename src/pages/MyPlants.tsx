@@ -19,6 +19,7 @@ import { PlantCardPrimary } from "../components/PlantCardPrimary";
 import { getBottomSpace } from "react-native-iphone-x-helper";
 import fonts from "../styles/fonts";
 import { PlantCardSecundary } from "../components/PlantCardSecundary";
+import { Load } from "../components/Load";
 
 export function MyPlants() {
    const [myPlants, setMyplants] = useState<PlantsProps[]>([]);
@@ -45,6 +46,9 @@ export function MyPlants() {
       carregarPlantas()
       //vetor para carregar o objeto dentro dele sempre que ele for chamado
    }, [])
+
+   if(loading)
+      return <Load/>
 
    return (
       <View style={styles.container}>

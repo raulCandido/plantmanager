@@ -6,6 +6,7 @@ import {
     Alert,
     Text,
     Image,
+    ScrollView,
     Platform
 } from "react-native";
 
@@ -73,61 +74,67 @@ export function PlantSave() {
     }
 
     return (
-        <View style={styles.container}>
-            <View style={styles.plantInfo}>
-                <SvgFromUri
-                    uri={plant.photo}
-                    height={150}
-                    width={150}
-                />
-                <Text style={styles.plantName}>
-                    {plant.name}
-                </Text>
-                <Text style={styles.plantAbout}>
-                    {plant.about}
-                </Text>
-            </View>
-
-            <View style={styles.controller}>
-                <View style={styles.tipConteiner}>
-                    <Image
-                        source={waterdrop}
-                        style={styles.tipImage}
+        //serve para telas menores permitindo que a tela realize um scroll para conter todoso os itens
+        <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.container}
+        >
+            <View style={styles.container}>
+                <View style={styles.plantInfo}>
+                    <SvgFromUri
+                        uri={plant.photo}
+                        height={150}
+                        width={150}
                     />
-                    <Text style={styles.tipText}>
-                        {plant.water_tips}
+                    <Text style={styles.plantName}>
+                        {plant.name}
+                    </Text>
+                    <Text style={styles.plantAbout}>
+                        {plant.about}
                     </Text>
                 </View>
-                <Text style={styles.alertLabel}>
-                    Selecione o melhor horário para o lembrete
-                </Text>
-                {
-                    showDatePicker && (
-                        <DateTimePicker
-                            value={selectDateTime}
-                            mode="time"
-                            display="spinner"
-                            onChange={handleChangeTime}
-                            is24Hour={true}
+
+                <View style={styles.controller}>
+                    <View style={styles.tipConteiner}>
+                        <Image
+                            source={waterdrop}
+                            style={styles.tipImage}
                         />
-                    )}
-                {
-                    Platform.OS === "android" && (
-                        <TouchableOpacity style={styles.dataTimerPickerButton}
-                            onPress={abrirDateTimePicker}
-                        >
-                            <Text style={styles.dataTimerPicker}>
-                                {`Mudar ${format(selectDateTime, "HH:mm")}`}
-                            </Text>
-                        </TouchableOpacity>
-                    )
-                }
-                <Button
-                    nome="Cadastrar planta"
-                    onPress={handleSave}
-                />
+                        <Text style={styles.tipText}>
+                            {plant.water_tips}
+                        </Text>
+                    </View>
+                    <Text style={styles.alertLabel}>
+                        Selecione o melhor horário para o lembrete
+                    </Text>
+                    {
+                        showDatePicker && (
+                            <DateTimePicker
+                                value={selectDateTime}
+                                mode="time"
+                                display="spinner"
+                                onChange={handleChangeTime}
+                                is24Hour={true}
+                            />
+                        )}
+                    {
+                        Platform.OS === "android" && (
+                            <TouchableOpacity style={styles.dataTimerPickerButton}
+                                onPress={abrirDateTimePicker}
+                            >
+                                <Text style={styles.dataTimerPicker}>
+                                    {`Mudar ${format(selectDateTime, "HH:mm")}`}
+                                </Text>
+                            </TouchableOpacity>
+                        )
+                    }
+                    <Button
+                        nome="Cadastrar planta"
+                        onPress={handleSave}
+                    />
+                </View>
             </View>
-        </View>
+        </ScrollView>
     )
 }
 
